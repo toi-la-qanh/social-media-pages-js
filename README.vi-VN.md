@@ -18,6 +18,34 @@ cd backend
 npm install
 npm run dev
 ```
+
+**Cài đặt CSDL (Cơ sở dữ liệu - Database)**:
+- Tự tạo CSDL postgres.
+- Rồi vô [env](./backend/.env.local), sửa cái này:
+
+```
+DATABASE_URL="postgresql://postgres:mat-khau@localhost:5432/ten-csdl"
+```
+
+- Migrate CSDL:
+
+```
+npm run migrate
+```
+
+**Tạo dữ liệu mẫu để test**: 
+- Vô [index.ts](./backend/src/index.ts), sửa thành `true`:
+> Nhớ sửa lại thành `false` sau khi tạo xong, không là nó chạy dữ liệu liên tục.
+```
+IndexFactory.run(true);
+```
+
+**Chạy Unit Test**:
+
+```
+npm run test
+```
+
 ### Frontend
 ```
 cd frontend

@@ -5,6 +5,9 @@
 <br>
 <img src="preview.gif" alt="Preview" >
 <br>
+<br>
+
+> 私の日本語は少し下手なので、もし何か間違いがあったらご遠慮なく直してください。
 
 ## インストール方法
 ```
@@ -17,6 +20,34 @@ cd backend
 npm install
 npm run dev
 ```
+**データベースの設定**:
+
+- 自分のPostgreSQLデータベースを作成します。
+- 次に、[env](./backend/.env.local)に移動し、以下を変更します：
+
+```
+DATABASE_URL="postgresql://postgres:database-password@localhost:5432/database-name"
+```
+
+- データベースをマイグレーションするには、次を実行します:
+
+```
+npm run migrate
+```
+
+**テスト用のフェイクデータを作成**:
+- [index.ts](./backend/src/index.ts)に移動し、以下を `true` に変更します：
+> 作成後は、必ず `false` に戻してください。
+```
+IndexFactory.run(true);
+```
+
+**ユニットテストを実行**:
+
+```
+npm run test
+```
+
 ### フロントエンド
 ```
 cd frontend

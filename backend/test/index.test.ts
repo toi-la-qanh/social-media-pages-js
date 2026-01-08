@@ -59,8 +59,8 @@ describe("Express Server", () => {
         });
       });
 
-    it("should return 401 for /api/users", async () => {
-        const res = await request(app).get("/api/users");
+    it("should return 401 for /api/users/me", async () => {
+        const res = await request(app).get("/api/users/me");
         expect(res.statusCode).toBe(401);
     });
 

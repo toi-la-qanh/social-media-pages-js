@@ -4,18 +4,16 @@ module.exports = {
   roots: ['<rootDir>/src', '<rootDir>/test'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
-    '^.+\\.ts$': ['ts-jest', {
-      tsconfig: 'tsconfig.json',  // Move ts-jest options here
+    '^.+\\.(ts|js)$': ['ts-jest', {
+      tsconfig: 'tsconfig.json',
     }],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(@faker-js)/)',
+  ],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',
   ],
-  moduleFileExtensions: ['ts', 'js', 'json'],
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.json',
-    },
-  },
+  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
 };
