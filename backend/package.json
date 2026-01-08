@@ -1,0 +1,68 @@
+{
+  "name": "social-media-pages-js-backend",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "typescript",
+    "expressjs",
+    "javascript",
+    "social-media"
+  ],
+  "homepage": "https://github.com/toi-la-qanh/social-media-pages-js#readme",
+  "bugs": {
+    "url": "https://github.com/toi-la-qanh/social-media-pages-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toi-la-qanh/social-media-pages-js.git"
+  },
+  "license": "MIT",
+  "author": "Quoc Anh Nguyen",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "dotenvx run -f .env.local -- tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "dotenvx run -f .env.production -- tsx src/index.ts",
+    "test": "dotenvx run -f .env.local -- jest --detectOpenHandles",
+    "migrate": "dotenvx run -f .env.local -- tsx src/migrate.ts"
+  },
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.48.4",
+    "@types/hashids": "^2.0.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "express-validator": "^7.2.1",
+    "hashids": "^2.3.0",
+    "hpp": "^0.2.3",
+    "i18next": "^25.3.6",
+    "i18next-fs-backend": "^2.6.0",
+    "i18next-http-middleware": "^3.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.11",
+    "postgres": "^3.4.7",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/hpp": "^0.2.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.3.0",
+    "@types/nodemailer": "^7.0.4",
+    "@types/supertest": "^6.0.3",
+    "jest": "^30.0.5",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.1",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
+  }
+}

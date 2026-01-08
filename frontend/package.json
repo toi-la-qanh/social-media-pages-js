@@ -1,0 +1,50 @@
+{
+  "name": "social-media-pages-js-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "license": "MIT",
+  "author": "Quoc Anh Nguyen",
+  "keywords": [
+    "typescript",
+    "vite",
+    "vue",
+    "tailwindcss",
+    "social-media"
+  ],
+  "homepage": "https://github.com/toi-la-qanh/social-media-pages-js#readme",
+  "bugs": {
+    "url": "https://github.com/toi-la-qanh/social-media-pages-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toi-la-qanh/social-media-pages-js.git"
+  },
+  "scripts": {
+    "dev": "dotenvx run -f .env.local -- vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.0.0",
+    "@fortawesome/free-brands-svg-icons": "^7.0.0",
+    "@fortawesome/free-regular-svg-icons": "^7.0.0",
+    "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@fortawesome/vue-fontawesome": "^3.1.1",
+    "@tailwindcss/vite": "^4.1.12",
+    "axios": "^1.11.0",
+    "escape-html": "^1.0.3",
+    "socket.io-client": "^4.8.1",
+    "tailwindcss": "^4.1.12",
+    "vue": "^3.5.18",
+    "vue-i18n": "^11.1.11",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.7.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2",
+    "vue-tsc": "^3.0.5"
+  }
+}

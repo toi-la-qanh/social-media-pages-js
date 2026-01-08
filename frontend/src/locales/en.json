@@ -1,0 +1,47 @@
+{
+  "loading": "Loading...",
+  "home": {
+    "createPost": {
+      "placeholder": "What's on your mind?",
+      "button": "Post"
+    }
+  },
+  "notFound": {
+    "content1": "Not all who wander are lost, but this page is",
+    "content2": "The link's not working or the page is gone. Go back to keep exploring.",
+    "goBack": "Back"
+  },
+  "profile": {
+    "createPost": {
+      "placeholder": "What's on your mind?",
+      "button": "Post"
+    }
+  },
+  "search": {
+    "input": {
+      "placeholder": {
+        "posts": "Search posts",
+        "users": "Search users",
+        "comments": "Search comments"
+      }
+    },
+    "buttons": {
+      "showPosts": "Posts",
+      "showUsers": "Users",
+      "showComments": "Comments"
+    },
+    "loading": "Loading..."
+  },
+  "routes": {
+    "home": "Home",
+    "search": "Search",
+    "post": "Post",
+    "notFound": "Not Found",
+    "notification": "Notification",
+    "profile": "Profile",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "forgotPassword": "Forgot Password",
+    "resetPassword": "Reset Password"
+  }
+}
