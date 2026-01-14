@@ -13,3 +13,4 @@ export const errorMessages = ref(null);
 export const isLoading = ref(false);
 export const theme = ref("light");
 export const showSettingsModal = ref(false);
+export const language = sessionStorage.getItem('language') || 'vi';

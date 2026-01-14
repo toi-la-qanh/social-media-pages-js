@@ -263,6 +263,16 @@ export default {
         await this.fetchPosts();
         await this.handleFollow();
     },
+    watch: {
+    '$route.params.username': async function() {
+      // When the username changes in the route, re-fetch the user data
+      await this.fetchUser();
+      await this.fetchFollowers();
+      await this.fetchFollowing();
+      await this.fetchPosts();
+      await this.handleFollow();
+    }
+  },
     methods: {
         /**
          * Fetch user data from the API
@@ -271,6 +281,7 @@ export default {
             const cachedUser = sessionStorage.getItem(`user-${this.$route.params.username}`);
             if (cachedUser) {
                 this.thisUser = JSON.parse(cachedUser);
+                console.log(this.thisUser);
                 return;
             }
             const userAPI = new UserApi();

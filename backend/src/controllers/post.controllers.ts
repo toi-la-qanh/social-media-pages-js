@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { param, body, query, validationResult } from "express-validator";
 import sql from "../database/config/postgres";
 import { Post, NewPost, UpdatePost } from "../models/post.models";
 import { Server, Socket } from "socket.io";
@@ -9,27 +8,11 @@ import { format, differenceInHours } from 'date-fns';
 export default class PostController {
     /**
      * Get all posts
-     * @param req.query.current_page - Current page number, default to 1
-     * @param req.query.total_pages - Total number of pages, default to 10
+     * @param req.query.current_page - Optional current page number, default to 1
+     * @param req.query.total_pages - Optional total number of pages, default to 10
      * @returns All posts
      */
     static async index(req: Request, res: Response) {
-        // Validate current page
-        await query('current_page')
-            .optional()
-            .run(req);
-
-        // Validate total pages
-        await query('total_pages')
-            .optional()
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Get pagination parameters, default to page 1 and limit 10
         const page = parseInt(req.query.current_page as string) || 1;
         const limit = parseInt(req.query.total_pages as string) || 10;
@@ -76,7 +59,7 @@ export default class PostController {
 
         // Check if there are any posts
         if (!posts || posts.length === 0) {
-            return res.status(404).json({ errors: 'No posts found' });
+            return res.status(404).json({ errors: req.t('controllers.post.errors.noPostsFound') });
         }
 
         // Encode IDs for each post
@@ -117,24 +100,10 @@ export default class PostController {
      * @returns Post data
      */
     static async show(req: Request, res: Response) {
-        // Validate post ID
-        await param('id')
-            .notEmpty()
-            .withMessage('Post ID is required')
-            .isString()
-            .withMessage('Post ID must be a string')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode post ID to get the actual ID
         const postID = postHashids.decode(req.params.id as string)[0] as number;
         if (!postID) {
-            return res.status(400).json({ errors: 'Invalid post ID' });
+            return res.status(400).json({ errors: req.t('controllers.post.errors.invalidID') });
         }
         //await sql<Post[]>`UPDATE posts SET views = views + 1 WHERE id = ${postID}`;
 
@@ -155,7 +124,7 @@ export default class PostController {
 
         // Check if post exists
         if (!post || post.length === 0) {
-            return res.status(404).json({ errors: 'Post not found' });
+            return res.status(404).json({ errors: req.t('controllers.post.errors.notFound') });
         }
 
         const createdAt = new Date(post[0].created_at);
@@ -187,31 +156,12 @@ export default class PostController {
      * @param req.body.image_url - Image URL (optional)
      */
     static async create(req: Request, res: Response) {
-        // Validate content
-        await body('content')
-            .notEmpty()
-            .withMessage('Content is required')
-            .isLength({ min: 50, max: 1000 })
-            .withMessage('Content must be between 50 and 1000 characters')
-            .run(req);
-
-        // Validate image URL
-        await body('image_url')
-            .optional()
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         const { content, image_url = null } = req.body;
 
         // Decode user ID to get the actual ID
         const userID = userHashids.decode(req.user as string)[0] as number;
         if (!userID) {
-            return res.status(400).json({ errors: 'Invalid user ID' });
+            return res.status(400).json({ errors: req.t('controllers.user.errors.invalidID') });
         }
 
         // Add new post into database
@@ -219,7 +169,7 @@ export default class PostController {
         INSERT INTO posts(content, image_url, user_id) 
         VALUES (${content}, ${image_url}, ${userID})`;
 
-        return res.status(200).json({ message: 'Post created successfully' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -229,41 +179,17 @@ export default class PostController {
      * @param req.body.image_url - Post image
      */
     static async update(req: Request, res: Response) {
-        // Validate post ID
-        await param('id')
-            .notEmpty()
-            .withMessage('Post ID is required')
-            .run(req);
-
-        // Validate content
-        await body('content')
-            .optional()
-            .isLength({ min: 50, max: 1000 })
-            .withMessage('Content must be between 50 and 1000 characters')
-            .run(req);
-
-        // Validate image URL
-        await body('image_url')
-            .optional()
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         const { content, image_url } = req.body;
 
         // If no data is provided to update, no need to run the query
         if (!content && !image_url) {
-            return res.status(200).json({ message: 'No data to update' });
+            return res.status(200).json([]);
         }
 
         // Decode post ID to get the actual ID
         const postID = postHashids.decode(req.params.id as string)[0] as number;
         if (!postID) {
-            return res.status(400).json({ errors: 'Invalid post ID' });
+            return res.status(400).json({ errors: req.t('controllers.post.errors.invalidID') });
         }
 
         // Get current post data
@@ -274,7 +200,7 @@ export default class PostController {
 
         // Check if post exists
         if (currentPost.length === 0) {
-            return res.status(404).json({ errors: 'Post not found' });
+            return res.status(404).json({ errors: req.t('controllers.post.errors.notFound') });
         }
 
         // Update post only if data is provided
@@ -284,7 +210,7 @@ export default class PostController {
             image_url = ${image_url || currentPost[0].image_url} 
         WHERE id = ${currentPost[0].id}`;
 
-        return res.status(200).json({ message: 'Post updated successfully' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -292,22 +218,10 @@ export default class PostController {
      * @param req.params.id - Post ID
      */
     static async destroy(req: Request, res: Response) {
-        // Validate post ID
-        await param('id')
-            .notEmpty()
-            .withMessage('Post ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode post ID to get the actual ID
         const postID = postHashids.decode(req.params.id as string)[0] as number;
         if (!postID) {
-            return res.status(400).json({ errors: 'Invalid post ID' });
+            return res.status(400).json({ errors: req.t('controllers.post.errors.invalidID') });
         }
 
         // Delete post from database
@@ -316,10 +230,10 @@ export default class PostController {
 
         // Check if post exists
         if (post.length === 0) {
-            return res.status(404).json({ errors: 'Post not found' });
+            return res.status(404).json({ errors: req.t('controllers.post.errors.notFound') });
         }
 
-        return res.status(200).json({ message: 'Post deleted successfully' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -328,22 +242,10 @@ export default class PostController {
      * @returns Count of replies of a post
      */
     static async getCountOfReplies(req: Request, res: Response) {
-        // Validate post ID
-        await param('id')
-            .notEmpty()
-            .withMessage('Post ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode post ID to get the actual ID
         const postID = postHashids.decode(req.params.id as string)[0] as number;
         if (!postID) {
-            return res.status(400).json({ errors: 'Invalid post ID' });
+            return res.status(400).json({ errors: req.t('controllers.post.errors.invalidID') });
         }
 
         // Get count of replies from database
@@ -365,22 +267,10 @@ export default class PostController {
     * @returns Replies of a post
     */
     static async showReplies(req: Request, res: Response) {
-        // Validate reply ID
-        await param('id')
-            .notEmpty()
-            .withMessage('Post ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode reply ID to get the actual ID
         const postID = postHashids.decode(req.params.id as string)[0] as number;
         if (!postID) {
-            return res.status(400).json({ errors: 'Invalid post ID' });
+            return res.status(400).json({ errors: req.t('controllers.post.errors.invalidID') });
         }
 
         // Get replies from database 
@@ -399,7 +289,7 @@ export default class PostController {
 
         // Check if there are any replies
         if (!replies || replies.length === 0) {
-            return res.status(200).json({ message: 'There are no replies yet' });
+            return res.status(200).json([]);
         }
 
         // Encode IDs for each reply
@@ -429,48 +319,20 @@ export default class PostController {
 
     /**
      * Create a new reply
-     * @param req.params.id - Post ID
-     * @param req.body.content - Reply content
-     * @param req.body.image_url - Reply image URL (optional)
      */
     static async createReply(req: Request, res: Response) {
-        // Validate post ID
-        await param('id')
-            .notEmpty()
-            .withMessage('Post ID is required')
-            .run(req);
-
-        // Validate content
-        await body('content')
-            .notEmpty()
-            .withMessage('Content is required')
-            .isLength({ min: 50, max: 1000 })
-            .withMessage('Content must be between 50 and 1000 characters')
-            .run(req);
-
-        // Validate image URL
-        await body('image_url')
-            .optional()
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         const { content, image_url } = req.body;
 
         // Decode post ID to get the actual ID
         const postID = postHashids.decode(req.params.id as string)[0] as number;
         if (!postID) {
-            return res.status(400).json({ errors: 'Invalid post ID' });
+            return res.status(400).json({ errors: req.t('controllers.post.errors.invalidID') });
         }
 
         // Decode user ID to get the actual ID
         const userID = userHashids.decode(req.user as string)[0] as number;
         if (!userID) {
-            return res.status(400).json({ errors: 'Invalid user ID' });
+            return res.status(400).json({ errors: req.t('controllers.user.errors.invalidID') });
         }
 
         // Add new reply into database
@@ -479,7 +341,7 @@ export default class PostController {
         VALUES (${content}, ${image_url}, ${userID})
         WHERE parent_id = ${postID}`;
 
-        return res.status(200).json({ message: 'Reply created successfully' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -487,22 +349,7 @@ export default class PostController {
     * @returns Post data
     */
     static async getUserPosts(req: Request, res: Response) {
-        // Validate username
-        await param('username')
-            .notEmpty()
-            .withMessage('Username is required')
-            .isString()
-            .withMessage('Username must be a string')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
-        // Decode post ID to get the actual ID
-        const username = req.params.username as string;
+        const { username } = req.params;
 
         // Get post data from database
         const posts = await sql<Post[]>`SELECT 
@@ -556,22 +403,7 @@ export default class PostController {
     * @returns Replies data
     */
     static async getUserReplies(req: Request, res: Response) {
-        // Validate username
-        await param('username')
-            .notEmpty()
-            .withMessage('Username is required')
-            .isString()
-            .withMessage('Username must be a string')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
-        // Decode post ID to get the actual ID
-        const username = req.params.username as string;
+        const { username } = req.params;
 
         // Get post data from database
         const posts = await sql<Post[]>`SELECT 

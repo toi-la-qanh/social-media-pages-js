@@ -14,14 +14,18 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ errors: "User not authenticated" });
+    return res.status(401).json({
+      errors: req.t("middlewares.auth.notAuthenticated")
+    });
   }
 
   jwt.verify(token, process.env.TOKEN_KEY as any, (err: any, decoded: any) => {
     if (err) {
-      return res.status(403).json({ errors: "Token invalid" });
+      return res.status(403).json({
+        errors: req.t("middlewares.auth.invalidToken")
+      });
     }
-    
+
     req.user = decoded.id; // Store user_id in request for later use
     next();
   });

@@ -1,0 +1,89 @@
+{
+  "controllers": {
+    "user": {
+      "validation": {
+        "id": {
+          "required": "ユーザーIDは必須です"
+        },
+        "query": {
+          "required": "検索クエリは必須です"
+        },
+        "email": {
+          "required": "メールアドレスは必須です",
+          "string": "メールアドレスは文字列である必要があります",
+          "notValid": "メールアドレスが無効です"
+        },
+        "full_name": {
+          "required": "氏名は必須です",
+          "string": "氏名は文字列である必要があります",
+          "notValid": "氏名が無効です"
+        },
+        "username": {
+          "required": "ユーザー名は必須です",
+          "string": "ユーザー名は文字列である必要があります",
+          "notValid": "ユーザー名が無効です"
+        },
+        "password": {
+          "required": "パスワードは必須です",
+          "string": "パスワードは文字列である必要があります",
+          "notValid": "パスワードが無効です"
+        },
+        "password_confirm": {
+          "required": "パスワード確認は必須です",
+          "string": "パスワード確認は文字列である必要があります"
+        },
+        "token": {
+          "required": "トークンは必須です"
+        }
+      },
+      "errors": {
+        "invalidID": "無効なIDです",
+        "notFound": "ユーザーが見つかりません",
+        "invalidPassword": "無効なパスワードです",
+        "passwordsNotMatch": "パスワードが一致しません",
+        "invalidToken": "無効なトークンです"
+      }
+    },
+    "post": {
+      "validation": {
+        "id": {
+          "required": "投稿IDは必須です",
+          "string": "投稿IDは文字列である必要があります"
+        },
+        "content": {
+          "required": "内容は必須です",
+          "string": "内容は文字列である必要があります",
+          "length": "内容は10文字以上、1000文字以下である必要があります"
+        }
+      },
+      "errors": {
+        "notFound": "投稿が見つかりません",
+        "invalidID": "無効な投稿IDです"
+      }
+    },
+    "follow": {
+      "validation": {
+        "following_id": {
+          "required": "フォローするIDは必須です"
+        },
+        "follower_id": {
+          "required": "フォロワーIDは必須です"
+        }
+      },
+      "errors": {
+        "invalidFollowingID": "無効なフォローIDです",
+        "invalidFollowerID": "無効なフォロワーIDです",
+        "notFollowing": "このユーザーをフォローしていません"
+      }
+    }
+  },
+  "middlewares": {
+    "auth": {
+      "notAuthenticated": "ログインしていません",
+      "invalidToken": "無効なトークンです"
+    },
+    "rateLimit": {
+      "message": "リクエストが多すぎます。数分後に再試行してください。"
+    }
+  }
+}

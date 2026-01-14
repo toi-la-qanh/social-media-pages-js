@@ -1,3 +1,89 @@
 {
-    
+  "controllers": {
+    "user": {
+      "validation": {
+        "id": {
+          "required": "User ID is required"
+        },
+        "query": {
+          "required": "Search query is required"
+        },
+        "email": {
+          "required": "Email is required",
+          "string": "Email must be a string",
+          "notValid": "Email not valid"
+        },
+        "full_name": {
+          "required": "Full name is required",
+          "string": "Full name must be a string",
+          "notValid": "Full name not valid"
+        },
+        "username": {
+          "required": "Username is required",
+          "string": "Username must be a string",
+          "notValid": "Username not valid"
+        },
+        "password": {
+          "required": "Password is required",
+          "string": "Password must be a string",
+          "notValid": "Password not valid"
+        },
+        "password_confirm": {
+          "required": "Password confirm is required",
+          "string": "Password confirm must be a string"
+        },
+        "token": {
+          "required": "Token is required"
+        }
+      },
+      "errors": {
+        "invalidID": "Invalid ID",
+        "notFound": "User not found",
+        "invalidPassword": "Invalid password",
+        "passwordsNotMatch": "Passwords do not match",
+        "invalidToken": "Invalid token"
+      }
+    },
+    "post": {
+      "validation": {
+        "id": {
+          "required": "Post ID is required",
+          "string": "Post ID must be a string"
+        },
+        "content": {
+          "required": "Content is required",
+          "string": "Content must be a string",
+          "length": "Content must be between 10 and 1000 characters"
+        }
+      },
+      "errors": {
+        "notFound": "No posts found",
+        "invalidID": "Invalid post ID"
+      }
+    },
+    "follow": {
+      "validation": {
+        "following_id": {
+          "required": "Following ID is required"
+        },
+        "follower_id": {
+          "required": "Follower ID is required"
+        }
+      },
+      "errors": {
+        "invalidFollowingID": "Invalid following ID",
+        "invalidFollowerID": "Invalid follower ID",
+        "notFollowing": "You don't follow this user"
+      }
+    }
+  },
+  "middlewares": {
+    "auth": {
+      "notAuthenticated": "User not authenticated",
+      "invalidToken": "Token invalid"
+    },
+    "rateLimit": {
+      "message": "Too many attempts, please try again in a few minutes !"
+    }
+  }
 }

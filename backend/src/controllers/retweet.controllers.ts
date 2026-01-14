@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
-import { param, validationResult, query } from "express-validator";
 import sql from "../database/config/postgres";
-import Hashids from 'hashids'
 import { Retweet, NewRetweet } from "../models/retweet.models";
 import { Server, Socket } from "socket.io";
-const hashids = new Hashids('Post', 10);
+import { postHashids, userHashids } from "../utils/hashids";
 
 export default class RetweetController {
     /**
@@ -12,28 +10,16 @@ export default class RetweetController {
      * @param req.params.post_id - Post ID
      */
     static async create(req: Request, res: Response) {
-        // Validate post ID
-        await param('post_id')
-            .notEmpty()
-            .withMessage('Post ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode post ID to get the actual ID
-        const postID = hashids.decode(req.params.post_id as string)[0] as number;
+        const postID = postHashids.decode(req.params.id as string)[0] as number;
         if(!postID) {
-            return res.status(400).json({ errors: 'Invalid post ID' });
+            return res.status(400).json({ errors: req.t('controllers.post.errors.invalidID') });
         }
 
         // Decode user ID to get the actual ID
-        const userID = hashids.decode(req.user as string)[0] as number;
+        const userID = userHashids.decode(req.user as string)[0] as number;
         if(!userID) {
-            return res.status(400).json({ errors: 'Invalid user ID' });
+            return res.status(400).json({ errors: req.t('controllers.user.errors.invalidID') });
         }
         
         // Add new retweet into database
@@ -41,31 +27,19 @@ export default class RetweetController {
         INSERT INTO retweets(post_id, user_id) 
         VALUES (${postID}, ${userID})`;
 
-        return res.status(200).json({ message: 'Retweet created successfully' });
+        return res.status(200).json([]);
     }
 
     /**
      * Delete a retweet
-     * @param req.params.post_id - Post ID
+     * @param req.params.id - Post ID
      */
     static async destroy(req: Request, res: Response) {
-        // Validate post ID
-        await param('post_id')
-            .notEmpty()
-            .withMessage('Post ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode post ID to get the actual ID
-        const postID = hashids.decode(req.params.post_id as string)[0] as number;
+        const postID = postHashids.decode(req.params.id as string)[0] as number;
 
         // Decode user ID to get the actual ID
-        const userID = hashids.decode(req.user as string)[0] as number;
+        const userID = userHashids.decode(req.user as string)[0] as number;
 
         // Delete retweet from database
         const deleted = await sql<Retweet[]>`
@@ -74,10 +48,10 @@ export default class RetweetController {
 
         // Check if retweet exists
         if (deleted.length === 0) {
-            return res.status(404).json({ error: 'Retweet not found' });
+            return res.status(404).json({ errors: req.t('controllers.retweet.errors.notFound') });
         }
 
-        return res.status(200).json({ message: 'Retweet deleted successfully' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -85,22 +59,10 @@ export default class RetweetController {
      * @param req.params.post_id - Post ID
      */
     static async count(req: Request, res: Response) {
-        // Validate post ID
-        await param('post_id')
-            .notEmpty()
-            .withMessage('Post ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode post ID to get the actual ID
-        const postID = hashids.decode(req.params.post_id as string)[0] as number;
+        const postID = postHashids.decode(req.params.id as string)[0] as number;
         if(!postID) {
-            return res.status(400).json({ errors: 'Invalid post ID' });
+            return res.status(400).json({ errors: req.t('controllers.post.errors.invalidID') });
         }
 
         // Get count of retweets from database
@@ -117,34 +79,10 @@ export default class RetweetController {
      * @returns All retweet posts of this user
      */
     static async index(req: Request, res: Response) {
-        // Validate user ID
-        await param('user_id')
-            .notEmpty()
-            .withMessage('User ID is required')
-            .run(req);
-
-        // Validate current page
-        await query('current_page')
-            .notEmpty()
-            .withMessage('Current page is required')
-            .run(req);
-
-        // Validate total pages
-        await query('total_pages')
-            .notEmpty()
-            .withMessage('Total pages is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode user ID to get the actual ID
-        const userID = hashids.decode(req.params.user_id as string)[0] as number;
+        const userID = userHashids.decode(req.params.id as string)[0] as number;
         if(!userID) {
-            return res.status(400).json({ errors: 'Invalid user ID' });
+            return res.status(400).json({ errors: req.t('controllers.user.errors.invalidID') });
         }
 
         // Get pagination parameters, default to page 1 and limit 10
@@ -157,7 +95,6 @@ export default class RetweetController {
         // Get all retweets from database
         const retweets = await sql<Retweet[]>`
         SELECT r.post_id AS post_id,
-               p.title,
                p.content,
                p.image_url,
                p.views,
@@ -173,14 +110,14 @@ export default class RetweetController {
 
         // Check if there are any retweets
         if (!retweets || retweets.length === 0) {
-            return res.status(200).json({ message: 'You don\'t have any retweet posts' });
+            return res.status(200).json([]);
         }
 
         // Encode IDs for each retweet post
         const retweetsWithEncodedIds = retweets.map(retweet => ({
             ...retweet,
-            post_id: hashids.encode(retweet.post_id),
-            author_id: hashids.encode(retweet.user_id)
+            post_id: postHashids.encode(retweet.post_id),
+            author_id: userHashids.encode(retweet.user_id)
         }));
 
         return res.status(200).json(retweetsWithEncodedIds);

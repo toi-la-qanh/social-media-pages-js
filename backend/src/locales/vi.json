@@ -1,3 +1,88 @@
 {
-    
+  "controllers": {
+    "user": {
+      "validation": {
+        "id": {
+          "required": "ID người dùng không được để trống"
+        },
+        "query": {
+          "required": "Từ khóa tìm kiếm không được để trống"
+        },
+        "email": {
+          "required": "Email không được để trống",
+          "string": "Email phải là chuỗi",
+          "notValid": "Email không hợp lệ"
+        },
+        "full_name": {
+          "required": "Họ tên không được để trống",
+          "string": "Họ tên phải là chuỗi",
+          "notValid": "Họ tên không hợp lệ"
+        },
+        "username": {
+          "required": "Tên người dùng không được để trống",
+          "string": "Tên người dùng phải là chuỗi",
+          "notValid": "Tên người dùng không hợp lệ"
+        },
+        "password": {
+          "required": "Mật khẩu không được để trống",
+          "string": "Mật khẩu phải là chuỗi",
+          "notValid": "Mật khẩu không hợp lệ"
+        },
+        "password_confirm": {
+          "required": "Xác nhận mật khẩu không được để trống",
+          "string": "Xác nhận mật khẩu phải là chuỗi"
+        },
+        "token": {
+          "required": "Token không được để trống"
+        }
+      },
+      "errors": {
+        "invalidID": "ID không hợp lệ",
+        "notFound": "Người dùng không tồn tại",
+        "invalidPassword": "Mật khẩu không đúng",
+        "passwordsNotMatch": "Mật khẩu xác nhận không khớp",
+        "invalidToken": "Token không hợp lệ"
+      }
+    },
+    "post": {
+      "validation": {
+        "id": {
+          "required": "ID bài viết không được để trống"
+        },
+        "content": {
+          "required": "Nội dung bài viết không được để trống",
+          "string": "Nội dung bài viết phải là chuỗi",
+          "length": "Nội dung bài viết phải có ít nhất 10 ký tự và nhiều nhất 1000 ký tự"
+        }
+      },
+      "errors": {
+        "notFound": "Bài viết không tồn tại",
+        "invalidID": "ID bài viết không hợp lệ"
+      }
+    },
+    "follow": {
+      "validation": {
+        "following_id": {
+          "required": "ID người dùng đang theo dõi không được để trống"
+        },
+        "follower_id": {
+          "required": "ID người dùng được theo dõi không được để trống"
+        }
+      },
+      "errors": {
+        "invalidFollowingID": "ID người dùng đang theo dõi không hợp lệ",
+        "invalidFollowerID": "ID người dùng được theo dõi không hợp lệ",
+        "notFollowing": "Bạn không theo dõi người dùng này"
+      }
+    }
+  },
+  "middlewares": {
+    "auth": {
+      "notAuthenticated": "Người dùng chưa xác thực",
+      "invalidToken": "Token không hợp lệ"
+    },
+    "rateLimit": {
+      "message": "Quá nhiều lần thử, vui lòng thử lại sau vài phút !"
+    }
+  }
 }

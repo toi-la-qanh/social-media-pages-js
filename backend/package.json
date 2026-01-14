@@ -24,7 +24,7 @@
     "dev": "dotenvx run -f .env.local -- tsx watch src/index.ts",
     "build": "tsc",
     "start": "dotenvx run -f .env.production -- tsx src/index.ts",
-    "test": "dotenvx run -f .env.local -- jest --detectOpenHandles",
+    "test": "dotenvx run -f .env.local -- jest --detectOpenHandles --silent",
     "migrate": "dotenvx run -f .env.local -- tsx src/migrate.ts"
   },
   "dependencies": {

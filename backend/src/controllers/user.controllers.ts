@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { body, validationResult, param } from "express-validator";
 import sql from "../database/config/postgres";
 import createSecretToken from "../auth/token";
 import bcrypt from "bcrypt";
@@ -17,51 +16,6 @@ export default class UserController {
     * @throws {400} If input is invalid
     */
     static async create(req: Request, res: Response) {
-        // Validate email 
-        await body('email')
-            .notEmpty()
-            .withMessage('Email is required')
-            .isString()
-            .withMessage('Email must be a string')
-            .matches(/^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/)
-            .withMessage('Email not valid')
-            .run(req);
-
-        // Validate name
-        await body('full_name')
-            .notEmpty()
-            .withMessage('Full name is required')
-            .isString()
-            .withMessage('Full name must be a string')
-            .matches(/^[\p{L}\sà-ỹÀ-Ỵ].*$/u)
-            .withMessage('Full name not valid')
-            .run(req);
-
-        await body('username')
-            .notEmpty()
-            .withMessage('Username is required')
-            .isString()
-            .withMessage('Username must be a string')
-            .matches(/^(?=.{3,30}$)(?![._])(?!.*[._]{2})[a-zA-Z0-9._]+(?<![._])$/)
-            .withMessage('Username not valid')
-            .run(req);
-
-        // Validate password
-        await body('password')
-            .notEmpty()
-            .withMessage('Password is required')
-            .isString()
-            .withMessage('Password must be a string')
-            .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
-            .withMessage('Password must be at least 8 characters long and contain at least one letter and one number')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         const { email, full_name, username, password } = req.body;
 
         // Hash the password
@@ -75,8 +29,8 @@ export default class UserController {
 
         // Hash the user ID
         const hashedId = userHashids.encode(user[0].id);
-        if(!hashedId) {
-            return res.status(400).json({ errors: 'Invalid user ID' });
+        if (!hashedId) {
+            return res.status(500).json({ errors: req.t('controllers.user.errors.invalidID') });
         }
 
         // Create a new token with the hashed ID
@@ -91,7 +45,7 @@ export default class UserController {
             sameSite: process.env.sameSite as any, // Set to Lax when run on local
         });
 
-        return res.status(200).json({ message: 'User created successfully' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -103,47 +57,25 @@ export default class UserController {
      * @throws {401} If password is not matching
      */
     static async login(req: Request, res: Response) {
-        // Validate email
-        await body('email')
-            .notEmpty()
-            .withMessage('Email is required')
-            .run(req);
-
-        // Validate password
-        await body('password')
-            .notEmpty()
-            .withMessage('Password is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         const { email, password } = req.body;
 
         // Get user data from database
         const userData = await sql<User[]>`
         SELECT id, password 
         FROM users 
-        WHERE email = ${email}`;
-
-        // Check if user exists
-        if (userData.length === 0) {
-            return res.status(404).json({ errors: 'User not found' });
-        }
+        WHERE email = ${email}
+        LIMIT 1`;
 
         // Check if password is valid
         const isPasswordValid = await bcrypt.compare(password, userData[0].password);
         if (!isPasswordValid) {
-            return res.status(400).json({ errors: 'Invalid password' });
+            return res.status(401).json({ errors: req.t('controllers.user.errors.invalidPassword') });
         }
 
         // Hash the user ID
         const hashedId = userHashids.encode(userData[0].id);
-        if(!hashedId) {
-            return res.status(400).json({ errors: 'Invalid user ID' });
+        if (!hashedId) {
+            return res.status(500).json({ errors: req.t('controllers.user.errors.invalidID') });
         }
         // Create a new token with the hashed ID
         const token = createSecretToken(hashedId);
@@ -160,7 +92,7 @@ export default class UserController {
             sameSite: process.env.sameSite as any, // Set to Lax when run on local
         });
 
-        return res.status(200).json({ message: 'Login successful' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -171,7 +103,7 @@ export default class UserController {
         res.clearCookie("token");
 
         // Return success message
-        return res.status(200).json({ message: "Logged out successfully" });
+        return res.status(200).json([]);
     }
 
     /**
@@ -183,18 +115,13 @@ export default class UserController {
         const decodedId = userHashids.decode(req.user as string)[0] as number;
 
         // Delete user from database
-        const user = await sql<User[]>`
+        await sql<User[]>`
         DELETE FROM users 
         WHERE id = ${decodedId}`;
 
-        // Check if user exists
-        if (user.length === 0) {
-            return res.status(404).json({ errors: 'User not found' });
-        }
-
         // Clear token from cookie
         res.clearCookie("token");
-        return res.status(200).json({ message: "User deleted successfully" });
+        return res.status(200).json([]);
     }
 
     /**
@@ -208,8 +135,9 @@ export default class UserController {
         // Decode user ID
         const decodedId = userHashids.decode(req.user as string)[0] as number;
         if (!decodedId) {
-            return res.status(400).json({ errors: 'Invalid user ID' });
+            return res.status(500).json({ errors: req.t('controllers.user.errors.invalidID') });
         }
+
         // Get user data from database
         const userData = await sql<User[]>`
         SELECT username, email, image_url, full_name
@@ -218,7 +146,7 @@ export default class UserController {
 
         // Check if user exists
         if (userData.length === 0) {
-            return res.status(404).json({ errors: 'User not found' });
+            return res.status(404).json({ errors: req.t('controllers.user.errors.notFound') });
         }
 
         return res.status(200).json({
@@ -238,19 +166,8 @@ export default class UserController {
     * @throws {404} If user not found
     */
     static async getUser(req: Request, res: Response) {
-        await param('username')
-            .notEmpty()
-            .withMessage('Username is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         const { username } = req.params;
-        
+
         const userData = await sql<User[]>`
             SELECT id, image_url, full_name
             FROM users 
@@ -258,7 +175,7 @@ export default class UserController {
 
         // Check if user exists
         if (userData.length === 0) {
-            return res.status(404).json({ errors: 'User not found' });
+            return res.status(404).json({ errors: req.t('controllers.user.errors.notFound') });
         }
 
         return res.status(200).json({
@@ -275,21 +192,7 @@ export default class UserController {
      * @returns Arrays of users
      */
     static async search(req: Request, res: Response) {
-        // Validate search query
-        await body('query')
-            .notEmpty()
-            .withMessage('Query is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
-        const { query } = req.body;
-
-        console.log(query);
+        const { q } = req.query;
 
         // Search users in database
         const users = await sql<User[]>`
@@ -302,14 +205,14 @@ export default class UserController {
             COALESCE(COUNT(f.follower_id), 0) AS followers_count
         FROM users u
         LEFT JOIN follows f ON f.following_id = u.id
-        WHERE u.username ILIKE ${`%${query}%`}
-           OR u.full_name ILIKE ${`%${query}%`}
+        WHERE u.username ILIKE ${`%${q}%`}
+           OR u.full_name ILIKE ${`%${q}%`}
         GROUP BY u.id, u.username, u.full_name, u.bio, u.image_url
         ORDER BY followers_count DESC, u.username ASC
         LIMIT 10;`;
 
         if (!users || users.length === 0) {
-            return res.status(200).json({ message: 'There are no users to show' });
+            return res.status(200).json([]);
         }
 
         // Encode IDs for each user
@@ -326,20 +229,6 @@ export default class UserController {
      * @param req.body.email - Email
      */
     static async forgotPassword(req: Request, res: Response) {
-        // Validate email
-        await body('email')
-            .notEmpty()
-            .withMessage('Email is required')
-            .matches(/^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/)
-            .withMessage('Email not valid')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         const { email } = req.body;
 
         // Generate a random secure token
@@ -353,11 +242,6 @@ export default class UserController {
         WHERE email = ${email}
         RETURNING email`;
 
-        // Check if user exists
-        if (user.length === 0) {
-            return res.status(404).json({ errors: 'User not found' });
-        }
-
         // Generate reset link
         const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
 
@@ -370,7 +254,7 @@ export default class UserController {
             html: `<p>Click the link to reset your password: <br> <a href="${resetLink}">${resetLink}</a></p>`
         };
         await MailService.sendMail(mail);
-        return res.status(200).json({ message: 'Reset link already sent to email' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -380,39 +264,11 @@ export default class UserController {
      * @param req.params.token - Reset password token
      */
     static async updatePassword(req: Request, res: Response) {
-        // Validate token
-        await param('token')
-            .notEmpty()
-            .withMessage('Token is required')
-            .run(req);
-
-        // Validate password
-        await body('password')
-            .notEmpty()
-            .withMessage('Password is required')
-            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
-            .withMessage('Password must be at least 8 characters long and contain at least one letter and one number')
-            .run(req);
-
-        // Validate confirm password
-        await body('password_confirm')
-            .notEmpty()
-            .withMessage('Password confirm is required')
-            .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
-            .withMessage('Password confirm must be at least 8 characters long and contain at least one letter and one number')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         const { password, password_confirm } = req.body;
 
         // Check if passwords match
         if (password !== password_confirm) {
-            return res.status(400).json({ errors: 'Passwords do not match' });
+            return res.status(422).json({ errors: req.t('controllers.user.errors.passwordsNotMatch') });
         }
 
         // Hash the password
@@ -430,8 +286,9 @@ export default class UserController {
     `;
 
         if (result.length === 0) {
-            return res.status(404).json({ errors: 'Invalid or expired token' });
+            return res.status(401).json({ errors: req.t('controllers.user.errors.invalidToken') });
         }
-        return res.status(200).json({ message: 'Password updated successfully' });
+
+        return res.status(200).json([]);
     }
 }

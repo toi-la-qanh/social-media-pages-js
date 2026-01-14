@@ -53,28 +53,28 @@ export default class BaseApi {
   /**
    * Axios POST Method
    */
-  post(url: string, data: any) {
-    return this.request('post', url, data);
+  post(url: string, data: any, params: any = null) {
+    return this.request('post', url, data, params);
   }
 
   /**
    * Axios PUT Method
    */
-  put(url: string, data: any) {
-    return this.request('put', url, data);
+  put(url: string, data: any, params: any = null) {
+    return this.request('put', url, data, params);
   }
 
   /**
    * Axios PATCH Method
    */
-  patch(url: string, data: any) {
-    return this.request('patch', url, data);
+  patch(url: string, data: any, params: any = null) {
+    return this.request('patch', url, data, params);
   }
 
   /**
    * Axios DELETE Method
    */
-  delete(url: string, data: any = null) {
-    return this.request('delete', url, data, null);
+  delete(url: string, data: any = null, params: any = null) {
+    return this.request('delete', url, data, params);
   }
 }

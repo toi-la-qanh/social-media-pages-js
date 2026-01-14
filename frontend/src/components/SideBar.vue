@@ -141,7 +141,7 @@ export default {
         },
         {
           icon: faUser,
-          link: user.value ? `/profile/${this.user.username}` : '/profile/null',
+          link: this.user ? `/profile/${this.user.username}` : '/profile/null',
           isButton: false,
         },
       ]

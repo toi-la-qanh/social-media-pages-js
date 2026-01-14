@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { param, validationResult } from "express-validator";
 import sql from "../database/config/postgres";
 import { Follow, NewFollow } from "../models/follow.models";
 import { userHashids } from "../utils/hashids";
@@ -11,28 +10,16 @@ export default class FollowController {
      * @returns A success message
      */
     static async create(req: Request, res: Response) {
-        // Validate following ID
-        await param('following_id')
-            .notEmpty()
-            .withMessage('Following ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode following ID to get the actual ID
         const followingID = userHashids.decode(req.params.following_id as string)[0] as number;
         if (Number.isNaN(followingID)) {
-            return res.status(400).json({ errors: 'Invalid following ID' });
+            return res.status(400).json({ errors: req.t('controllers.follow.errors.invalidFollowingID') });
         }
 
         // Decode follower ID to get the actual ID
         const followerID = userHashids.decode(req.user as string)[0] as number;
         if (Number.isNaN(followerID)) {
-            return res.status(400).json({ errors: 'Invalid follower ID' });
+            return res.status(400).json({ errors: req.t('controllers.follow.errors.invalidFollowerID') });
         }
 
         // Add new follow into database
@@ -41,7 +28,7 @@ export default class FollowController {
         VALUES (${followerID}, ${followingID}) 
         ON CONFLICT (follower_id, following_id) DO NOTHING`;
 
-        return res.status(200).json({ message: 'You are now following this user' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -50,27 +37,15 @@ export default class FollowController {
      * @returns A success message or error if the user wasn't following
      */
     static async destroy(req: Request, res: Response) {
-        // Validate following ID
-        await param('following_id')
-            .notEmpty()
-            .withMessage('Following ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode following ID to get the actual ID
         const followingID = userHashids.decode(req.params.following_id as string)[0] as number;
         if (Number.isNaN(followingID)) {
-            return res.status(400).json({ errors: 'Invalid following ID' });
+            return res.status(400).json({ errors: req.t('controllers.follow.errors.invalidFollowingID') });
         }
         // Decode follower ID (current user) to get the actual ID
         const followerID = userHashids.decode(req.user as string)[0] as number;
         if (Number.isNaN(followerID)) {
-            return res.status(400).json({ errors: 'Invalid follower ID' });
+            return res.status(400).json({ errors: req.t('controllers.follow.errors.invalidFollowerID') });
         }
 
         // Delete follow from database
@@ -80,10 +55,10 @@ export default class FollowController {
 
         // Check if follow exists
         if (deleted.length === 0) {
-            return res.status(404).json({ errors: 'You don\'t follow this user' });
+            return res.status(404).json({ errors: req.t('controllers.follow.errors.notFollowing') });
         }
 
-        return res.status(200).json({ message: 'You are no longer following this user' });
+        return res.status(200).json([]);
     }
 
     /**
@@ -94,28 +69,16 @@ export default class FollowController {
      * @returns An object containing a boolean indicating follow status
      */
     static async isFollowing(req: Request, res: Response) {
-        // Validate following ID
-        await param('following_id')
-            .notEmpty()
-            .withMessage('Following ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode following ID to get the actual ID
         const followingID = userHashids.decode(req.params.following_id as string)[0] as number;
         if (Number.isNaN(followingID)) {
-            return res.status(400).json({ errors: 'Invalid following ID' });
+            return res.status(400).json({ errors: req.t('controllers.follow.errors.invalidFollowingID') });
         }
 
         // Decode follower ID (current user) to get the actual ID
         const followerID = userHashids.decode(req.user as string)[0] as number;
         if (Number.isNaN(followerID)) {
-            return res.status(400).json({ errors: 'Invalid follower ID' });
+            return res.status(400).json({ errors: req.t('controllers.follow.errors.invalidFollowerID') });
         }
 
         const isFollowing = await sql<Follow[]>`
@@ -128,26 +91,14 @@ export default class FollowController {
     /**
      * Get all people who are following this person.
      *
-     * The target user is identified by the `user_id` route parameter.
+     * The target user is identified by the `id` route parameter.
      * Each follower includes basic profile information.
      *
      * @returns An array of followers
      */
     static async getFollowers(req: Request, res: Response) {
-        // Validate user ID
-        await param('user_id')
-            .notEmpty()
-            .withMessage('User ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode user ID to get the actual ID
-        const userID = userHashids.decode(req.params.user_id as string)[0] as number;
+        const userID = userHashids.decode(req.params.id as string)[0] as number;
 
         // Get all followers of the user
         const followers = await sql<Follow[]>`
@@ -177,26 +128,14 @@ export default class FollowController {
     /**
      * Get all people whom this person is following.
      *
-     * The target user is identified by the `user_id` route parameter.
+     * The target user is identified by the `id` route parameter.
      * Each following includes basic profile information.
      *
      * @returns An array of following
      */
     static async getFollowing(req: Request, res: Response) {
-        // Validate user ID
-        await param('user_id')
-            .notEmpty()
-            .withMessage('User ID is required')
-            .run(req);
-
-        // Show errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array()[0].msg });
-        }
-
         // Decode user ID to get the actual ID
-        const userID = userHashids.decode(req.params.user_id as string)[0] as number;
+        const userID = userHashids.decode(req.params.id as string)[0] as number;
 
         // Get all following of the user
         const following = await sql<Follow[]>`

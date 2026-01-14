@@ -26,51 +26,29 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // app.set("trust proxy", 3);
-const PORT = Number(process.env.PORT);
 const server = http.createServer(app);
+let PORT = Number(process.env.PORT) || 3000;
+if (process.env.NODE_ENV === "test") {
+  PORT = 5000;
+}
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
 
 /* Language Translation Setup */
-import i18next from "i18next";
-import Backend from "i18next-fs-backend";
 import i18nextMiddleware from "i18next-http-middleware";
-import path from "path";
+import { i18n, initI18n } from "./locales/index.locales";
 
-i18next
-  .use(Backend)
-  .use(i18nextMiddleware.LanguageDetector)
-  .init({
-    fallbackLng: "en",
-    preload: ["en", "vi"],
-    backend: {
-      loadPath: path.join(__dirname, "locales/{{lng}}.json"),
-    },
-    detection: {
-      order: ["querystring", "cookie", "header"],
-      lookupQuerystring: "lang",
-      caches: ["cookie"],
-      cookieOptions: {
-        path: "/",
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.sameSite,
-        cookieDomain: process.env.cookieDomain, // for production
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      },
-    },
-  });
-
-app.use(i18nextMiddleware.handle(i18next));
+void initI18n();
+app.use(i18nextMiddleware.handle(i18n));
 
 /* Initialize socket.io */
 import SocketController from "./socket/socket.controller";
 new SocketController(server);
 
 // Generate some fake data
-import IndexFactory from './database/factories/index.factories';
-IndexFactory.run(false);
+// import IndexFactory from './database/factories/index.factories';
+// IndexFactory.run(false);
 
 // Routes 
 import IndexRoutes from './routes/index.routes';
