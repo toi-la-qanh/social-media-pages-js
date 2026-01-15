@@ -1,0 +1,137 @@
+{
+  "loading": "読み込み中...",
+  "home": {
+    "createPost": {
+      "placeholder": "何を考えていますか？",
+      "button": "投稿"
+    },
+    "noPosts": "投稿がありません"
+  },
+  "specifiedPost": {
+    "buttons": {
+      "goBack": "戻る",
+      "post": "投稿",
+      "viewActivity": "活動を見る"
+    },
+    "input": {
+      "reply": "この投稿について何か言ってください ..."
+    },
+    "views": "閲覧数",
+    "noPostAvailable": "投稿がありません"
+  },
+  "notFound": {
+    "title": "すべての人が迷っているわけではありませんが、このページは",
+    "subtitle": "リンクが機能しないか、ページが削除されました。戻って探索を続けてください。",
+    "buttons": {
+      "goBack": "戻る"
+    }
+  },
+  "profile": {
+    "createPost": {
+      "placeholder": "何を考えていますか？",
+      "button": "投稿"
+    },
+    "buttons": {
+      "editProfile": "プロフィールを編集",
+      "follow": "フォロー",
+      "following": "フォロー中",
+      "posts": "投稿",
+      "replies": "返信",
+      "reposts": "リポスト"
+    },
+    "noPostsYet": "投稿がありません。",
+    "noRepliesYet": "返信がありません。",
+    "noRepostsYet": "リポストがありません。",
+    "userNotFound": "ユーザーが見つかりません",
+    "followersCountText": "フォロワー"
+  },
+  "search": {
+    "input": "検索",
+    "buttons": {
+      "follow": "フォロー"
+    },
+    "followersCountText": "フォロワー"
+  },
+  "signIn": {
+    "title": "サインイン",
+    "subtitle": "より多くのコンテンツを見る",
+    "input": {
+      "email": "メールアドレスを入力してください..."
+    },
+    "buttons": {
+      "signIn": "サインイン",
+      "forgotPassword": "パスワードを忘れた？",
+      "signUpNow": "サインアップ"
+    },
+    "subtext": {
+      "noAccount": "アカウントがありません？"
+    }
+  },
+  "signUp": {
+    "title": "サインアップ",
+    "subtitle": "アカウントを作成",
+    "input": {
+      "username": "ユーザー名を入力してください...",
+      "fullName": "フルネームを入力してください...",
+      "email": "メールアドレスを入力してください...",
+      "password": "パスワードを入力してください..."
+    },
+    "buttons": {
+      "signUp": "サインアップ",
+      "signInNow": "サインイン"
+    },
+    "subtext": {
+      "alreadyHaveAccount": "アカウントがありません？"
+    }
+  },
+  "forgotPassword": {
+    "title": "パスワードを忘れた？",
+    "subtitle": "メールアドレスを覚えていますか？",
+    "input": {
+      "email": "メールアドレスを入力してください..."
+    },
+    "buttons": {
+      "sendResetLink": "リセットリンクを送信",
+      "resendResetLink": "リセットリンクを再送信",
+      "resendIn": "再送信"
+    }
+  },
+  "resetPassword": {
+    "title": "パスワードをリセット",
+    "subtitle": "新しいパスワードを更新",
+    "input": {
+      "password": "パスワードを入力してください...",
+      "password_confirm": "パスワードを確認してください..."
+    },
+    "buttons": {
+      "updatePassword": "パスワードを更新"
+    }
+  },
+  "routes": {
+    "home": "ホーム",
+    "search": "検索",
+    "post": "投稿",
+    "notFound": "見つかりません",
+    "notification": "通知",
+    "profile": "プロフィール",
+    "signIn": "サインイン",
+    "signUp": "サインアップ",
+    "forgotPassword": "パスワードを忘れた？",
+    "resetPassword": "パスワードをリセット"
+  },
+  "settings": {
+    "appearance": "外観",
+    "language": "言語",
+    "settings": "設定",
+    "logout": "ログアウト",
+    "back": "戻る",
+    "themes": {
+      "auto": "自動"
+    },
+    "languages": {
+      "english": "English",
+      "vietnamese": "Tiếng Việt",
+      "japanese": "日本語"
+    }
+  }
+}

@@ -74,7 +74,7 @@ export default class BaseApi {
   /**
    * Axios DELETE Method
    */
-  delete(url: string, data: any = null, params: any = null) {
-    return this.request('delete', url, data, params);
+  delete(url: string, params: any = null) {
+    return this.request('delete', url, null, params);
   }
 }

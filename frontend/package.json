@@ -23,7 +23,11 @@
   "scripts": {
     "dev": "dotenvx run -f .env.local -- vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest --silent",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage",
+    "test:browser": "vitest --config=vitest.browser.config.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.0.0",
@@ -42,9 +46,15 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
+    "@vitest/browser-playwright": "^4.0.17",
+    "@vitest/coverage-v8": "^4.0.17",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
+    "jsdom": "^26.0.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.2",
+    "vitest": "^4.0.17",
+    "vitest-browser-vue": "^2.0.1",
     "vue-tsc": "^3.0.5"
   }
 }

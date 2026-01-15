@@ -7,10 +7,10 @@
             <!-- Title -->
             <div class="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col gap-1">
                 <h2 class="text-center text-2xl font-bold">
-                    Sign Up
+                    {{ $t('signUp.title') }}
                 </h2>
                 <h3 class="text-center italic text-sm text-gray-500">
-                    Create your account
+                    {{ $t('signUp.subtitle') }}
                 </h3>
             </div>
 
@@ -20,21 +20,21 @@
                     <!-- Username -->
                     <div className="flex gap-4 items-center">
                         <FontAwesomeIcon class="sm:text-xl text-lg" :icon="faUser" />
-                        <input v-model="username" name="username" autoComplete="on" placeholder="Enter username..."
+                        <input v-model="username" name="username" autoComplete="on" :placeholder="$t('signUp.input.username')"
                             class="block w-full rounded-md border-0 sm:py-3 py-2 sm:px-3 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm" />
                     </div>
 
                     <!-- Full Name -->
                     <div className="flex gap-4 items-center">
                         <FontAwesomeIcon class="sm:text-xl text-lg" :icon="faUser" />
-                        <input v-model="full_name" name="full_name" autoComplete="on" placeholder="Enter full name..."
+                        <input v-model="full_name" name="full_name" autoComplete="on" :placeholder="$t('signUp.input.fullName')"
                             class="block w-full rounded-md border-0 sm:py-3 py-2 sm:px-3 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm" />
                     </div>
 
                     <!-- Email -->
                     <div className="flex gap-4 items-center">
                         <FontAwesomeIcon class="sm:text-xl text-lg" :icon="faEnvelope" />
-                        <input v-model="email" name="email" type="email" autoComplete="on" placeholder="Enter email..."
+                        <input v-model="email" name="email" type="email" autoComplete="on" :placeholder="$t('signUp.input.email')"
                             class="block w-full rounded-md border-0 sm:py-3 py-2 sm:px-3 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm" />
                     </div>
 
@@ -44,7 +44,7 @@
                         <div
                             class="flex items-center sm:py-2.5 py-1.5 sm:px-3 px-2 w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm">
                             <input v-model="password" name="password" :type="showPassword ? 'text' : 'password'"
-                                placeholder="Enter password..."
+                                :placeholder="$t('signUp.input.password')"
                                 class="placeholder:text-gray-400 focus:ring-0 focus:outline-none w-full" />
                             <FontAwesomeIcon class="inline-block sm:text-base text-sm" :icon="faEye" v-if="showPassword"
                                 @click="toggleShowPassword" />
@@ -59,7 +59,7 @@
                             'flex w-full h-auto p-2 justify-center rounded-md border',
                             theme === 'dark' ? 'bg-black hover:bg-stone-800 border-gray-700' : 'bg-black text-white hover:bg-stone-800 border-stone-200'
                         ]">
-                            Sign Up
+                            {{ $t('signUp.buttons.signUp') }}
                         </button>
                         
                         <!-- Sign Up Errors -->
@@ -71,9 +71,9 @@
 
                 <!-- Register Link -->
                 <p class="flex py-2 justify-between sm:text-sm text-xs">
-                    Already have an account?
+                    {{ $t('signUp.subtext.alreadyHaveAccount') }}
                     <router-link to="/sign-in" class="font-semibold text-sky-600 hover:text-sky-500">
-                        Sign in now
+                        {{ $t('signUp.buttons.signInNow') }}
                     </router-link>
                 </p>
             </div>

@@ -1,1 +1,137 @@
-{}
+{
+  "loading": "Đang tải...",
+  "home": {
+    "createPost": {
+      "placeholder": "Bạn đang nghĩ gì?",
+      "button": "Đăng"
+    },
+    "noPosts": "Hiện không có bài viết nào"
+  },
+  "specifiedPost": {
+    "buttons": {
+      "goBack": "Quay lại",
+      "post": "Đăng",
+      "viewActivity": "Xem hoạt động"
+    },
+    "input": {
+      "reply": "Nói gì đó về bài viết này ..."
+    },
+    "views": "lượt xem",
+    "noPostAvailable": "Không tìm thấy bài viết"
+  },
+  "notFound": {
+    "title": "Không phải tất cả những người đi lạc đều bị mất, nhưng trang này là",
+    "subtitle": "Liên kết không hoạt động hoặc trang đã bị xóa. Quay lại để tiếp tục khám phá.",
+    "buttons": {
+      "goBack": "Quay lại"
+    }
+  },
+  "profile": {
+    "createPost": {
+      "placeholder": "Bạn đang nghĩ gì?",
+      "button": "Đăng"
+    },
+    "buttons": {
+      "editProfile": "Chỉnh sửa hồ sơ",
+      "follow": "Theo dõi",
+      "following": "Đang theo dõi",
+      "posts": "Bài viết",
+      "replies": "Phản hồi",
+      "reposts": "Đăng lại"
+    },
+    "noPostsYet": "Hiện không có bài viết nào.",
+    "noRepliesYet": "Hiện không có phản hồi nào.",
+    "noRepostsYet": "Hiện không có đăng lại nào.",
+    "userNotFound": "Không tìm thấy người dùng",
+    "followersCountText": "người theo dõi"
+  },
+  "search": {
+    "input": "Tìm kiếm",
+    "buttons": {
+      "follow": "Theo dõi"
+    },
+    "followersCountText": "người theo dõi"
+  },
+  "signIn": {
+    "title": "Đăng nhập",
+    "subtitle": "Để xem nhiều nội dung hơn",
+    "input": {
+      "email": "Nhập email..."
+    },
+    "buttons": {
+      "signIn": "Đăng nhập",
+      "forgotPassword": "Quên mật khẩu?",
+      "signUpNow": "Đăng ký ngay"
+    },
+    "subtext": {
+      "noAccount": "Không có tài khoản?"
+    }
+  },
+  "signUp": {
+    "title": "Đăng ký",
+    "subtitle": "Tạo tài khoản",
+    "input": {
+      "username": "Nhập tên người dùng...",
+      "fullName": "Nhập họ tên...",
+      "email": "Nhập email...",
+      "password": "Nhập mật khẩu..."
+    },
+    "buttons": {
+      "signUp": "Đăng ký",
+      "signInNow": "Đăng nhập ngay"
+    },
+    "subtext": {
+      "alreadyHaveAccount": "Đã có tài khoản?"
+    }
+  },
+  "forgotPassword": {
+    "title": "Quên mật khẩu",
+    "subtitle": "Bạn có nhớ email của mình không?",
+    "input": {
+      "email": "Nhập email..."
+    },
+    "buttons": {
+      "sendResetLink": "Gửi liên kết khôi phục mật khẩu",
+      "resendResetLink": "Gửi lại liên kết khôi phục mật khẩu",
+      "resendIn": "Gửi lại trong"
+    }
+  },
+  "resetPassword": {
+    "title": "Khôi phục mật khẩu",
+    "subtitle": "Cập nhật mật khẩu mới",
+    "input": {
+      "password": "Nhập mật khẩu...",
+      "password_confirm": "Xác nhận mật khẩu..."
+    },
+    "buttons": {
+      "updatePassword": "Cập nhật mật khẩu"
+    }
+  },
+  "routes": {
+    "home": "Trang chủ",
+    "search": "Tìm kiếm",
+    "post": "Bài viết",
+    "notFound": "Không tìm thấy",
+    "notification": "Thông báo",
+    "profile": "Hồ sơ",
+    "signIn": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "forgotPassword": "Quên mật khẩu",
+    "resetPassword": "Khôi phục mật khẩu"
+  },
+  "settings": {
+    "appearance": "Giao diện",
+    "language": "Ngôn ngữ",
+    "settings": "Cài đặt",
+    "logout": "Đăng xuất",
+    "back": "Quay lại",
+    "themes": {
+      "auto": "Tự động"
+    },
+    "languages": {
+      "english": "English",
+      "vietnamese": "Tiếng Việt",
+      "japanese": "日本語"
+    }
+  }
+}

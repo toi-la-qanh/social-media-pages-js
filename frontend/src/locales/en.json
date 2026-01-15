@@ -4,33 +4,108 @@
     "createPost": {
       "placeholder": "What's on your mind?",
       "button": "Post"
-    }
+    },
+    "noPosts": "No posts available"
+  },
+  "specifiedPost": {
+    "buttons": {
+      "goBack": "Go back",
+      "post": "Post",
+      "viewActivity": "View Activity"
+    },
+    "input": {
+      "reply": "Say something about this post ..."
+    },
+    "views": "views",
+    "noPostAvailable": "No post available"
   },
   "notFound": {
-    "content1": "Not all who wander are lost, but this page is",
-    "content2": "The link's not working or the page is gone. Go back to keep exploring.",
-    "goBack": "Back"
+    "title": "Not all who wander are lost, but this page is",
+    "subtitle": "The link's not working or the page is gone. Go back to keep exploring.",
+    "buttons": {
+      "goBack": "Back"
+    }
   },
   "profile": {
     "createPost": {
       "placeholder": "What's on your mind?",
       "button": "Post"
-    }
-  },
-  "search": {
-    "input": {
-      "placeholder": {
-        "posts": "Search posts",
-        "users": "Search users",
-        "comments": "Search comments"
-      }
     },
     "buttons": {
-      "showPosts": "Posts",
-      "showUsers": "Users",
-      "showComments": "Comments"
+      "editProfile": "Edit Profile",
+      "follow": "Follow",
+      "following": "Following",
+      "posts": "Posts",
+      "replies": "Replies",
+      "reposts": "Reposts"
     },
-    "loading": "Loading..."
+    "noPostsYet": "No posts yet.",
+    "noRepliesYet": "No replies yet.",
+    "noRepostsYet": "No reposts yet.",
+    "userNotFound": "User not found",
+    "followersCountText": "followers"
+  },
+  "search": {
+    "input": "Search",
+    "buttons": {
+      "follow": "Follow"
+    },
+    "followersCountText": "followers"
+  },
+  "signIn": {
+    "title": "Sign In",
+    "subtitle": "For more contents",
+    "input": {
+      "email": "Enter email..."
+    },
+    "buttons": {
+      "signIn": "Sign In",
+      "forgotPassword": "Forgot Password?",
+      "signUpNow": "Sign up now"
+    },
+    "subtext": {
+      "noAccount": "No account?"
+    }
+  },
+  "signUp": {
+    "title": "Sign Up",
+    "subtitle": "Create your account",
+    "input": {
+      "username": "Enter username...",
+      "fullName": "Enter full name...",
+      "email": "Enter email...",
+      "password": "Enter password..."
+    },
+    "buttons": {
+      "signUp": "Sign Up",
+      "signInNow": "Sign in now"
+    },
+    "subtext": {
+      "alreadyHaveAccount": "Already have an account?"
+    }
+  },
+  "forgotPassword": {
+    "title": "Forgot Password",
+    "subtitle": "Did you remember your email?",
+    "input": {
+      "email": "Enter email..."
+    },
+    "buttons": {
+      "sendResetLink": "Send Reset Link",
+      "resendResetLink": "Resend Reset Link",
+      "resendIn": "Resend in"
+    }
+  },
+  "resetPassword": {
+    "title": "Reset Password",
+    "subtitle": "Update your new password",
+    "input": {
+      "password": "Enter password...",
+      "password_confirm": "Confirm password..."
+    },
+    "buttons": {
+      "updatePassword": "Update Password"
+    }
   },
   "routes": {
     "home": "Home",
@@ -43,5 +118,20 @@
     "signUp": "Sign Up",
     "forgotPassword": "Forgot Password",
     "resetPassword": "Reset Password"
+  },
+  "settings": {
+    "appearance": "Appearance",
+    "language": "Language",
+    "settings": "Settings",
+    "logout": "Logout",
+    "back": "Back",
+    "themes": {
+      "auto": "Auto"
+    },
+    "languages": {
+      "english": "English",
+      "vietnamese": "Tiếng Việt",
+      "japanese": "日本語"
+    }
   }
 }

@@ -9,7 +9,7 @@
         </div>
         <div v-else>
             <div v-if="!posts || posts.length === 0">
-                No posts available
+                {{ $t('home.noPosts') }}
             </div>
             <div v-else>
                 <!-- Create Post Input -->
@@ -69,7 +69,7 @@
                                     </div>
 
                                     <!-- Post Content -->
-                                    <router-link class="block w-full relative" :to="`/post/${post.id}`">
+                                    <router-link class="block w-full whitespace-pre-wrap break-all" :to="`/post/${post.id}`">
                                         {{ post.content }}
                                     </router-link>
 
@@ -129,7 +129,7 @@
 
                 <!-- Loading More Indicator -->
                 <div v-if="isLoadingMore" class="flex justify-center items-center py-4">
-                    <p class="text-stone-400">Loading more posts...</p>
+                    <p class="text-stone-400">...</p>
                 </div>
             </div>
         </div>

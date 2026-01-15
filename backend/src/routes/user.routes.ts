@@ -16,7 +16,7 @@ export default class UserRoutes extends BaseRoutes {
     protected setupRoutes(): void {
         // User info
         this.router.get("/me", auth, UserController.getCurrentUser);
-        this.router.get("/profile/:username", auth,
+        this.router.get("/profile/:username",
             UserValidator.username(),
             validateMiddleware,
             UserController.getUser);

@@ -7,6 +7,7 @@ import {
 const userApi = new UserApi();
 
 export default async function authMiddleware(to: any, from: any, next: any) {
+  void from;
   isLoading.value = true;
 
   const isAuthenticated = !!user.value && user.value.id !== null;

@@ -19,24 +19,11 @@
 </template>
 
 <script lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import {
-    faComment,
-    faHeart,
-    faShareFromSquare,
-} from '@fortawesome/free-regular-svg-icons';
-import { faRetweet } from '@fortawesome/free-solid-svg-icons';
 import { isLoading } from '../store.ts';
 import NotificationApi from '../api/notification.api';
 
 export default {
     name: 'Notification',
-    components: {
-        FontAwesomeIcon,
-    },
-    setup() {
-        return { faComment, faHeart, faShareFromSquare, faRetweet }
-    },
     data() {
         return {
             notifications: [] as any[],
@@ -45,29 +32,27 @@ export default {
         }
     },
     async mounted() {
-        // start listening for realtime like/unlike events
-        this.eventListener();
+        await this.fetchNotifications();
     },
     methods: {
-
-
         /**
-         * Listen for like/unlike events from other users and update only the affected post
+         * Fetch notifications from the API
          */
-        eventListener() {
-            this.$socket.on('like', (postID: string) => {
-                const post = this.posts.find((p: any) => p.id === postID);
-                if (post) {
-                    post.likes = (post.likes || 0) + 1;
+        async fetchNotifications() {
+            const api = new NotificationApi();
+            try {
+                const response = await api.index();
+                if (response?.errors) {
+                    this.error = response.errors;
+                    this.notifications = [];
+                    return;
                 }
-            });
-            this.$socket.on('unlike', (postID: string) => {
-                const post = this.posts.find((p: any) => p.id === postID);
-                if (post) {
-                    post.likes = Math.max(0, (post.likes || 0) - 1);
-                }
-            });
-        }
+                this.notifications = Array.isArray(response) ? response : [];
+            } catch (err: any) {
+                this.error = err?.message ?? String(err);
+                this.notifications = [];
+            }
+        },
     }
 }
 </script>

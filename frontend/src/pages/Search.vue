@@ -14,7 +14,7 @@
             'text-base',
             theme === 'dark' ? 'text-stone-600' : 'text-stone-400'
           ]" :icon="faSearch" />
-          <input v-model="query" @input="searchUsers" type="text" placeholder="Search"
+          <input v-model="query" @input="searchUsers" type="text" :placeholder="$t('search.input')"
             class="w-full h-full outline-none">
         </div>
         <font-awesome-icon :class="[
@@ -57,9 +57,9 @@
             <!-- Follow Button -->
             <div class="relative right-0 pr-5">
               <button :class="[
-                'border rounded-xl px-6 py-1.5 font-bold',
+                'border rounded-xl px-6 py-1.5 min-w-30 font-bold',
                 theme === 'dark' ? 'border-gray-700' : 'border-none bg-black text-white'
-              ]">Follow</button>
+              ]">{{ $t('search.buttons.follow') }}</button>
             </div>
           </div>
 
@@ -67,7 +67,7 @@
           <p class="">{{ user.bio }}</p>
 
           <!-- Followers Count -->
-          <p class="text-stone-400">{{ user.followers_count }} followers</p>
+          <p class="text-stone-400">{{ user.followers_count }} {{ $t('search.followersCountText') }}</p>
         </div>
       </router-link>
     </div>

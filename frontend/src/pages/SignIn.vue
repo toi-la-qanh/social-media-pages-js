@@ -8,10 +8,10 @@
             <!-- Title -->
             <div class="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col gap-1">
                 <h2 class="text-center text-2xl font-bold">
-                    Sign In
+                    {{ $t('signIn.title') }}
                 </h2>
                 <h3 class="text-center italic text-sm text-gray-500">
-                    For more contents
+                    {{ $t('signIn.subtitle') }}
                 </h3>
             </div>
 
@@ -21,14 +21,14 @@
                     <!-- Email -->
                     <div className="flex gap-4 items-center pb-6">
                         <FontAwesomeIcon class="sm:text-xl text-base" :icon="faEnvelope" />
-                        <input v-model="email" name="email" type="email" autoComplete="on" placeholder="Enter email..."
+                        <input v-model="email" name="email" type="email" autoComplete="on" :placeholder="$t('signIn.input.email')"
                             class="block w-full rounded-md border-0 sm:py-3 py-2 sm:px-3 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm text-xs" />
                     </div>
 
                     <!-- Forgot Password -->
                     <div class="flex justify-end sm:text-sm text-xs">
                         <router-link to="/forgot-password" class="font-semibold text-sky-600 hover:text-sky-500">
-                            Forgot Password?
+                            {{ $t('signIn.buttons.forgotPassword') }}
                         </router-link>
                     </div>
 
@@ -36,7 +36,7 @@
                     <div className="flex gap-4 items-center pb-6">
                         <FontAwesomeIcon class="sm:text-xl text-base" :icon="faLock" />
                         <div class="flex items-center sm:py-2.5 py-1.5 sm:px-3 px-2 w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm text-xs">
-                            <input v-model="password" name="password" :type="showPassword ? 'text' : 'password'" placeholder="Enter password..."
+                            <input v-model="password" name="password" :type="showPassword ? 'text' : 'password'" :placeholder="$t('signIn.input.password')"
                                 class="placeholder:text-gray-400 focus:ring-0 focus:outline-none w-full" />
                             <FontAwesomeIcon class="inline-block sm:text-xl text-base" :icon="faEye" v-if="showPassword" @click="toggleShowPassword" />
                             <FontAwesomeIcon class="inline-block sm:text-xl text-base" :icon="faEyeSlash" v-else @click="toggleShowPassword" />
@@ -50,7 +50,7 @@
                                 'flex w-full h-auto p-2 justify-center rounded-md border',
                                 theme === 'dark' ? 'bg-black hover:bg-stone-800 border-gray-700' : 'bg-black text-white hover:bg-stone-800 border-stone-200'
                             ]">
-                            Sign In
+                            {{ $t('signIn.buttons.signIn') }}
                         </button>
                     </div>
 
@@ -62,9 +62,9 @@
 
                 <!-- Register Link -->
                 <p class="flex py-2 justify-between sm:text-sm text-xs">
-                    No account?
+                    {{ $t('signIn.subtext.noAccount') }}
                     <router-link to="/sign-up" class="font-semibold text-sky-600 hover:text-sky-500">
-                        Sign up now
+                        {{ $t('signIn.buttons.signUpNow') }}
                     </router-link>
                 </p>
             </div>

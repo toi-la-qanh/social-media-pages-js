@@ -16,9 +16,11 @@ export function initI18n() {
     .use(i18nextMiddleware.LanguageDetector)
     .init({
       fallbackLng: "en",
-      preload: ["en", "vi", "jp"],
+      load: "languageOnly",
+      supportedLngs: ["en", "vi", "ja"],
+      nonExplicitSupportedLngs: true,
+      preload: ["en", "vi", "ja"],
       backend: {
-        // JSON files live next to this module: `src/locales/en.json`, `src/locales/vi.json`
         loadPath: path.join(__dirname, "{{lng}}.json"),
       },
       detection: {

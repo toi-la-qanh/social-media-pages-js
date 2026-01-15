@@ -10,19 +10,19 @@
             <button class="border border-gray-300 py-1 px-2 rounded-lg items-center" :class="theme === 'dark'
                 ? 'hover:bg-gray-400'
                 : 'hover:text-gray-500'" @click="goBack">
-                Go back
+                {{ $t('specifiedPost.buttons.goBack') }}
             </button>
         </div>
 
         <div v-else>
             <div v-if="!post">
-                No posts available
+                {{ $t('specifiedPost.noPostsAvailable') }}
             </div>
             <div v-else>
                 <p :class="[
                     'flex text-base justify-center text-center items-center absolute top-10 left-0 w-full',
                     theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
-                ]">{{ post.views }} views</p>
+                ]">{{ post.views }} {{ $t('specifiedPost.views') }}</p>
                 <!-- Main content -->
                 <div class="px-6 py-3 ">
                     <div class="flex flex-col w-full border-b border-stone-300">
@@ -94,18 +94,18 @@
 
         <div class="flex flex-row justify-between px-6 py-2 border-b border-stone-300">
             <p class="font-bold">Top</p>
-            <p>View Activity</p>
+            <p>{{ $t('specifiedPost.buttons.viewActivity') }}</p>
         </div>
 
         <!-- Comment Form -->
         <div v-if="user && user.id !== null" class="relative border-b border-gray-400 m-5">
             <form action="" method="POST" class="flex justify-between" @submit.prevent="handleComment">
                 <input ref="inputRef" v-model="inputComment" name="content" type="text"
-                    placeholder="Say something about this post ..." class="border p-2 w-full border-none outline-none"
+                    :placeholder="$t('specifiedPost.input.reply')" class="border p-2 w-full border-none outline-none"
                     :class="[
                         isFixed ? 'fixed top-0 left-0 z-10' : 'relative']" />
                 <button class="border border-gray-300 py-1 px-2 rounded-lg">
-                    Post
+                    {{ $t('specifiedPost.buttons.post') }}
                 </button>
             </form>
         </div>
@@ -138,7 +138,7 @@
 
                                 <!-- View Count -->
                                 <div class="flex justify-end text-base text-gray-400">
-                                    {{ reply.views }} Views
+                                    {{ reply.views }} {{ $t('specifiedPost.views') }}
                                 </div>
 
                                 <!-- Interactions -->

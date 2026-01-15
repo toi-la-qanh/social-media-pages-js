@@ -5,10 +5,10 @@
             <!-- Title -->
             <div class="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col gap-1">
                 <h2 class="text-center text-2xl font-bold">
-                    Forgot Password
+                    {{ $t('forgotPassword.title') }}
                 </h2>
                 <h3 class="text-center italic text-sm text-gray-500">
-                    Did you remember your email?
+                    {{ $t('forgotPassword.subtitle') }}
                 </h3>
             </div>
 
@@ -18,7 +18,7 @@
                     <!-- Email -->
                     <div className="flex gap-4 items-center">
                         <FontAwesomeIcon class="sm:text-3xl text-2xl" :icon="faEnvelope" />
-                        <input v-model="email" name="email" type="email" autoComplete="on" placeholder="Enter email..."
+                        <input v-model="email" name="email" type="email" autoComplete="on" :placeholder="$t('forgotPassword.input.email')"
                             class="block w-full rounded-md border-0 sm:py-3 py-2 sm:px-3 px-2 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm" />
                     </div>
 
@@ -26,17 +26,17 @@
                     <div>
                         <button type="submit" :disabled="isCountdownActive"
                             :class="[
-                                'flex w-full justify-center items-center mb-2 rounded-md h-9 text-base font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+                                'flex w-full justify-center items-center mb-2 rounded-md h-9 text-base font-semibold shadow-sm focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
                                 isCountdownActive 
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                                     : 'bg-gray-100 text-gray-900 hover:bg-gray-700'
                             ]">
-                            {{ buttonText }}
+                            {{ $t('forgotPassword.buttons.sendResetLink') }}
                         </button>
                     </div>
 
                     <!-- Login Errors -->
-                    <p v-if="errors" class="text-red-100 text-red-800">
+                    <p v-if="errors" class="text-red-800">
                         {{ errors }}
                     </p>
                 </form>
@@ -75,12 +75,12 @@ export default {
         },
         buttonText() {
             if (this.countdown > 0) {
-                return `Resend in ${this.countdown}s`;
+                return `${this.$t('forgotPassword.buttons.resendIn')} ${this.countdown}s`;
             }
             if (this.message) {
-                return 'Resend Reset Link';
+                return this.$t('forgotPassword.buttons.resendResetLink');
             }
-            return 'Send Reset Link';
+            return this.$t('forgotPassword.buttons.sendResetLink');
         },
     },
     beforeUnmount() {

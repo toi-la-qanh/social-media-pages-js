@@ -100,7 +100,7 @@ export class UserValidator {
     * @returns Validator
     */
     static username() {
-        return body('username')
+        return param('username')
             .notEmpty()
             .withMessage('controllers.user.validation.username.required')
             .isString()

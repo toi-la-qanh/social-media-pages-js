@@ -11,7 +11,7 @@
             <!-- Show Not Found Message -->
             <div v-if="!thisUser">
                 <div class="flex justify-center items-center h-screen w-full">
-                    <div class="text-red-500">User not found</div>
+                    <div class="text-red-500">{{ $t('profile.userNotFound') }}</div>
                 </div>
             </div>
             <div v-else>
@@ -29,22 +29,22 @@
                     </div>
 
                     <!-- Followers Count -->
-                    <p class="text-stone-400">{{ followers.length }} followers</p>
+                    <p class="text-stone-400">{{ followers.length }} {{ $t('profile.followersCountText') }}</p>
 
                     <!-- Edit Profile Button -->
                     <button v-if="user && user.id === thisUser.id" @click="handleEditProfile" :class="['w-full border rounded-xl px-6 py-1.5 font-bold',
                         theme === 'dark' ? 'border-gray-700' : 'border-stone-300'
-                    ]">Edit Profile</button>
+                    ]">{{ $t('profile.buttons.editProfile') }}</button>
 
                     <!-- Follow Button -->
                     <button v-if="user && user.id !== thisUser.id && !isFollowing" @click="handleFollow" :class="['w-full border rounded-xl px-6 py-1.5 font-bold',
                         theme === 'dark' ? 'border-gray-700' : 'border-stone-300'
-                    ]">Follow</button>
+                    ]">{{ $t('profile.buttons.follow') }}</button>
 
                     <!-- Follow Button -->
                     <button v-if="user && user.id !== thisUser.id && isFollowing" @click="handleUnfollow" :class="['w-full border rounded-xl px-6 py-1.5 font-bold',
                         theme === 'dark' ? 'border-gray-700' : 'border-stone-300'
-                    ]">Following</button>
+                    ]">{{ $t('profile.buttons.following') }}</button>
                 </div>
 
                 <!-- Tabs -->
@@ -55,24 +55,24 @@
                         postTab
                             ? (theme === 'dark' ? 'border-stone-500 font-bold' : 'border-black font-bold')
                             : (theme === 'dark' ? 'border-transparent' : 'border-transparent')
-                    ]" @click="handleTab('posts')">Posts</button>
+                    ]" @click="handleTab('posts')">{{ $t('profile.buttons.posts') }}</button>
                     <button :class="['w-full h-full border-b',
                         repliesTab
                             ? (theme === 'dark' ? 'border-stone-500 font-bold' : 'border-black font-bold')
                             : (theme === 'dark' ? 'border-transparent' : 'border-transparent')
-                    ]" @click="handleTab('replies')">Replies</button>
+                    ]" @click="handleTab('replies')">{{ $t('profile.buttons.replies') }}</button>
                     <button :class="['w-full h-full border-b',
                         repostsTab
                             ? (theme === 'dark' ? 'border-stone-500 font-bold' : 'border-black font-bold')
                             : (theme === 'dark' ? 'border-transparent' : 'border-transparent')
-                    ]" @click="handleTab('reposts')">Reposts</button>
+                    ]" @click="handleTab('reposts')">{{ $t('profile.buttons.reposts') }}</button>
                 </div>
 
                 <!-- Posts -->
                 <div v-if="postTab">
                     <!-- Create Post Component -->
                     <div v-if="user && user.id === thisUser.id" :class="[
-                        'w-full border-b',
+                        'w-full border-b sm:block hidden',
                         theme === 'dark' ? 'border-gray-700' : 'border-gray-300'
                     ]" @click="handleCreatePost">
                         <div class="flex flex-row justify-between px-6 py-4">
@@ -93,7 +93,7 @@
 
                     <!-- No Posts Found -->
                     <div v-if="posts.length === 0" class="flex w-full h-40 items-center justify-center text-center">
-                        <p class="text-stone-400">No posts yet.</p>
+                        <p class="text-stone-400">{{ $t('profile.noPostsYet') }}</p>
                     </div>
 
                     <!-- Posts Found -->
@@ -111,7 +111,7 @@
 
                                     <!-- User Data and Post Content -->
                                     <div class="flex flex-row justify-between top-[-2px] relative w-full">
-                                        <div class="flex flex-col w-full gap-1">
+                                        <div class="flex flex-col w-full gap-1 min-w-0">
                                             <!-- User Data -->
                                             <div class="flex flex-row gap-2">
                                                 <!-- User Name -->
@@ -129,7 +129,9 @@
                                             </div>
 
                                             <!-- Post Content -->
-                                            <router-link class="block w-full relative" :to="`/post/${post.id}`">
+                                            <router-link
+                                                class="block w-full whitespace-pre-wrap break-all"
+                                                :to="`/post/${post.id}`">
                                                 {{ post.content }}
                                             </router-link>
 
@@ -193,7 +195,7 @@
                 <div v-if="repliesTab">
                     <!-- No Replies Found -->
                     <div v-if="replies.length === 0" class="flex w-full h-40 items-center justify-center text-center">
-                        <p class="text-stone-400">No replies yet.</p>
+                        <p class="text-stone-400">{{ $t('profile.noRepliesYet') }}</p>
                     </div>
 
                     <!-- Replies Found -->
@@ -208,7 +210,7 @@
                 <div v-if="repostsTab">
                     <!-- No Reposts Found -->
                     <div v-if="reposts.length === 0" class="flex w-full h-40 items-center justify-center text-center">
-                        <p class="text-stone-400">No reposts yet.</p>
+                        <p class="text-stone-400">{{ $t('profile.noRepostsYet') }}</p>
                     </div>
                 </div>
             </div>
@@ -223,11 +225,12 @@ import {
     faHeart,
     faShareFromSquare,
 } from '@fortawesome/free-regular-svg-icons';
-import { faRetweet, faEllipsis } from '@fortawesome/free-solid-svg-icons';
-import { theme, isLoading, user, showCreatePostModal } from '../store.ts';
+import { faRetweet, faEllipsis, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { theme, isLoading, user, showCreatePostModal, showCreateReplyModal } from '../store.ts';
 import UserApi from '../api/user.api';
 import FollowApi from '../api/follow.api';
 import PostApi from '../api/post.api';
+import LikeApi from '../api/like.api';
 
 export default {
     name: 'Profile',
@@ -235,7 +238,7 @@ export default {
         FontAwesomeIcon,
     },
     setup() {
-        return { faComment, faHeart, faShareFromSquare, faRetweet, faEllipsis }
+        return { faComment, faHeart, faShareFromSquare, faRetweet, faEllipsis, faAngleRight }
     },
     data() {
         return {
@@ -253,7 +256,9 @@ export default {
             repliesTab: false,
             repostsTab: false,
             showCreatePostModal,
+            showCreateReplyModal,
             isFollowing: false,
+            selectedReplyPost: null as any,
         }
     },
     async mounted() {
@@ -264,15 +269,15 @@ export default {
         await this.handleFollow();
     },
     watch: {
-    '$route.params.username': async function() {
-      // When the username changes in the route, re-fetch the user data
-      await this.fetchUser();
-      await this.fetchFollowers();
-      await this.fetchFollowing();
-      await this.fetchPosts();
-      await this.handleFollow();
-    }
-  },
+        '$route.params.username': async function () {
+            // When the username changes in the route, re-fetch the user data
+            await this.fetchUser();
+            await this.fetchFollowers();
+            await this.fetchFollowing();
+            await this.fetchPosts();
+            await this.handleFollow();
+        }
+    },
     methods: {
         /**
          * Fetch user data from the API
@@ -468,6 +473,52 @@ export default {
                 console.error('Error unfollowing user', error);
                 return;
             }
+        },
+
+        /**
+        * Handle like/unlike event
+        */
+        async handleLike(postID: string, post: any) {
+            const likeAPI = new LikeApi();
+            const key = `liked-post-${postID}`;
+            try {
+                if (post.hasLiked) {
+                    const response = await likeAPI.destroy(postID);
+                    if (response.errors) {
+                        console.error('Error unliking post', response.errors);
+                        return;
+                    }
+                    post.hasLiked = false;
+
+                    // Notify other users that this user unliked the post
+                    this.$socket.emit('unlike', postID);
+                    // instantly update the like count
+                    post.likes = Math.max(0, (post.likes || 0) - 1);
+                    sessionStorage.setItem(key, 'false');
+                } else {
+                    const response = await likeAPI.store(postID);
+                    if (response.errors) {
+                        return;
+                    }
+                    post.hasLiked = true;
+
+                    // Notify other users that this user liked the post
+                    this.$socket.emit('like', postID);
+                    // instantly update the like count
+                    post.likes = (post.likes || 0) + 1;
+                    sessionStorage.setItem(key, 'true');
+                }
+            } catch (err) {
+                console.error('Error toggling like', err);
+            }
+        },
+
+        /**
+        * Open reply modal for a specific post
+        */
+        openReply(post: any) {
+            this.selectedReplyPost = post;
+            this.showCreateReplyModal = true;
         },
 
         /**

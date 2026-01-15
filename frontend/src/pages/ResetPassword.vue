@@ -5,10 +5,10 @@
             <!-- Title -->
             <div class="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col gap-1">
                 <h2 class="text-center text-2xl font-bold">
-                    Reset Password
+                    {{ $t('resetPassword.title') }}
                 </h2>
                 <h3 class="text-center italic text-sm text-gray-500">
-                    Update your new password
+                    {{ $t('resetPassword.subtitle') }}
                 </h3>
             </div>
 
@@ -21,7 +21,7 @@
                         <div
                             class="flex items-center sm:py-2.5 py-1.5 sm:px-3 px-2 w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
                             <input v-model="password" name="password" :type="showPassword ? 'text' : 'password'"
-                                placeholder="Enter password..."
+                                :placeholder="$t('resetPassword.input.password')"
                                 class="placeholder:text-gray-400 focus:ring-0 focus:outline-none w-full" />
                             <FontAwesomeIcon class="inline-block sm:text-2xl text-xl" :icon="faEye" v-if="showPassword"
                                 @click="toggleShowPassword" />
@@ -36,7 +36,7 @@
                         <div
                             class="flex items-center sm:py-2.5 py-1.5 sm:px-3 px-2 w-full rounded-md border-0 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm">
                             <input v-model="password_confirm" name="password_confirm"
-                                :type="showPassword ? 'text' : 'password'" placeholder="Enter password..."
+                                :type="showPassword ? 'text' : 'password'" :placeholder="$t('resetPassword.input.password_confirm')"
                                 class="placeholder:text-gray-400 focus:ring-0 focus:outline-none w-full" />
                             <FontAwesomeIcon class="inline-block sm:text-2xl text-xl" :icon="faEye" v-if="showPassword"
                                 @click="toggleShowPassword" />
@@ -48,13 +48,13 @@
                     <!-- Submit Button -->
                     <div>
                         <button type="submit"
-                            class="flex w-full justify-center items-center mb-2 rounded-md bg-gray-100 text-gray-900 h-9 text-base font-semibold shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            Update Password
+                            class="flex w-full justify-center items-center mb-2 rounded-md bg-gray-100 text-gray-900 h-9 text-base font-semibold shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            {{ $t('resetPassword.buttons.updatePassword') }}
                         </button>
                     </div>
 
                     <!-- Errors -->
-                    <p v-if="errors" class="text-red-100 text-red-800">
+                    <p v-if="errors" class="text-red-800">
                         {{ errors }}
                     </p>
                 </form>
